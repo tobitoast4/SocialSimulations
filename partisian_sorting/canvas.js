@@ -160,7 +160,7 @@ let k=2;        // amount of static opinions
 let m=10;       // integer values that a dynamic opinion attribute can be
 let n=4;        // amount of dynamic opinions per agent
 let gamma=0.5;  // how many other (not their neighbours) agents an agent will see in %
-let h=8;        // 
+let h=8;        // Steepness for relative similarity
 let c=1;        // weight, how strong the static opinion should be valued
 
 function init() {

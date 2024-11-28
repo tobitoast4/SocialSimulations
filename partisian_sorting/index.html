@@ -68,6 +68,33 @@
                     <input type="number" id="cell_size" value="32">
                 </div>
             </div>
+            <hr>
+            <div class="grid-container">
+                <div class="grid-item">k - Amount of different static opinions</div>
+                <div class="grid-item">
+                    <input type="number" id="param_k" value="2">
+                </div>
+                <div class="grid-item">m - Possible dynamic opinion integer values (1-m)</div>
+                <div class="grid-item">
+                    <input type="number" id="param_m" value="10">
+                </div>
+                <div class="grid-item">n - Amount of dynamic opinions per agent</div>
+                <div class="grid-item">
+                    <input type="number" id="param_n" value="4">
+                </div>
+                <div class="grid-item">γ - How many other agents an agent will see in %</div>
+                <div class="grid-item">
+                    <input type="number" id="param_gamma" value="0.5" step=".1">
+                </div>
+                <div class="grid-item">h - Steepness for relative similarity</div>
+                <div class="grid-item">
+                    <input type="number" id="param_h" value="8">
+                </div>
+                <div class="grid-item">c - Influence of static opinion on abs. similarity</div>
+                <div class="grid-item">
+                    <input type="number" id="param_c" value="4">
+                </div>
+            </div>
             <br>
             <div style="display: flex; gap: 12px">
                 <button type="button" onclick="loadAndStart()">Reload & start setup</button>
@@ -86,6 +113,14 @@
     <script>
         async function loadAndStart() {
             document.getElementById('loading').style.display = "block";
+            param_k = parseInt(document.getElementById('param_k').value);
+            param_m = parseInt(document.getElementById('param_m').value);
+            param_n = parseInt(document.getElementById('param_n').value);
+            param_gamma = parseFloat(document.getElementById('param_gamma').value);
+            param_h = parseInt(document.getElementById('param_h').value);
+            param_c = parseInt(document.getElementById('param_c').value);
+
+
             cells_height = parseInt(document.getElementById('cells_height').value);
             cells_width = parseInt(document.getElementById('cells_width').value);
             cell_size = parseInt(document.getElementById('cell_size').value);
