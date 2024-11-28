@@ -7,9 +7,10 @@ import math
 
 # This contains the logic of the model described in Törnberg, P. (2022) "How digital media drive affective polarization through partisan sorting" PNAS.
 # Please see the paper for detailed description of the model.
+# From: https://github.com/cssmodels/tornberg2022pnas/blob/main/sorting_model.py
 class sorting_model:
     
-    def __init__(self,k=2,m=10,n=4,nragents=100,gamma=0.,h=8,c=1, custom_network = None):        
+    def __init__(self,k=2,m=10,n=4,nragents=100,gamma=0.5,h=8,c=1, custom_network=None):        
         self.m = m
         self.k = k
         self.n = n
@@ -128,3 +129,6 @@ class sorting_model:
         within = np.mean([self.fraction_shared_flex(a,b) for a,b in self.within])
         between = np.mean([self.fraction_shared_flex(a,b) for a,b in self.between])
         return within - between
+    
+sm = sorting_model()
+sm.run(1000)
