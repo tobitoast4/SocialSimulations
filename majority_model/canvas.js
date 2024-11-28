@@ -144,25 +144,25 @@ function init() {
 
     for (let i = 0; i < cells.length; i++){
         let cell = cells[i];
-        if (cell.row-1 > 0) {  // north
+        if (cell.row-1 >= 0) {  // north
             cell.neighbours.push(getCellAtPosition(cell.row-1, cell.col));
         }
         if (cell.row+1 < cells_height) {  // south
             cell.neighbours.push(getCellAtPosition(cell.row+1, cell.col));
         }
-        if (cell.col-1 > 0) {  // west
+        if (cell.col-1 >= 0) {  // west
             cell.neighbours.push(getCellAtPosition(cell.row, cell.col-1));
         }
         if (cell.col+1 < cells_width) {  // east
             cell.neighbours.push(getCellAtPosition(cell.row, cell.col+1));
         }
-        if (cell.row-1 > 0 && cell.col-1 > 0) {  // north-west
+        if (cell.row-1 >= 0 && cell.col-1 >= 0) {  // north-west
             cell.neighbours.push(getCellAtPosition(cell.row-1, cell.col-1));
         }
-        if (cell.row-1 > 0 && cell.col+1 < cells_width) {  // north-east
+        if (cell.row-1 >= 0 && cell.col+1 < cells_width) {  // north-east
             cell.neighbours.push(getCellAtPosition(cell.row-1, cell.col+1));
         }
-        if (cell.row+1 < cells_height && cell.col-1 > 0) {  // south-west
+        if (cell.row+1 < cells_height && cell.col-1 >= 0) {  // south-west
             cell.neighbours.push(getCellAtPosition(cell.row+1, cell.col-1));
         }
         if (cell.row+1 < cells_height && cell.col+1 < cells_width) {  // south-east
