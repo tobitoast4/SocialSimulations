@@ -83,6 +83,7 @@ function Line(x0, y0, x1, y2){
         ctx.beginPath();
         ctx.moveTo(this.x0, this.y0);
         ctx.lineTo(this.x1, this.y2);
+        ctx.strokeStyle = "#999999";
         ctx.stroke();
     }
 
@@ -108,13 +109,24 @@ function Cell(row, col, x, y, cell_size){
 
 function Agent(cell){
     this.cell = cell;
+    this.color = "black";
     this.static_opinion = getRandomInt1(k);
     this.dynamic_opinions = [];
     for (let i=0; i < n; i++) {
         this.dynamic_opinions.push(getRandomInt1(m));
     }
 
+    this.calculateColor = function() {
+        let ds = this.dynamic_opinions;
+        // e.g. m=10; n=4; d=(7, 2, 3, 8) yields (7000, 200, 30, 8)
+        let ds_ = ds.map((x, i) => (x-1)*m**(ds.length - i - 1));  // (x-1) bacause dynamic_opinions are 1-index based (1-m)
+        let sum = ds_.reduce((a, b) => a + b, 0); // e.g. ds_=(7000, 200, 30, 8) yields 7230
+        let hex = Math.floor((sum / m**n) * 256*256*256).toString(16);  // e.g. sum=m**n yields ffffff
+        this.color = "#" + hex.padStart(6, '0');
+    }
+
     this.draw = function() {
+        this.calculateColor();
         if (this.static_opinion == 1) {  // draw agent as an x
             let margin = cell_size / 6;
             ctx.lineWidth = cell_size / 10 + 1;
@@ -123,13 +135,14 @@ function Agent(cell){
             ctx.lineTo(this.cell.x + cell_size - margin, this.cell.y + cell_size - margin);
             ctx.moveTo(this.cell.x + cell_size - margin, this.cell.y + margin);
             ctx.lineTo(this.cell.x + margin, this.cell.y + cell_size - margin);
+            ctx.strokeStyle = this.color;
             ctx.stroke();
         }
         if (this.static_opinion == 2) {  // draw agent as an o
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.arc(this.cell.x + cell_size / 2, this.cell.y + cell_size / 2, cell_size / 3, 0, 2 * Math.PI);
-            ctx.fillStyle = "black";
+            ctx.fillStyle = this.color;
             ctx.fill();
         }
     }
@@ -156,12 +169,12 @@ let cells_width = undefined;                // set in setup
 let cells_height = undefined;               // set in setup
 let cell_size = undefined;                  // set in setup
 
-let k=2;        // amount of static opinions
-let m=10;       // integer values that a dynamic opinion attribute can be
-let n=4;        // amount of dynamic opinions per agent
-let gamma=0.5;  // how many other (not their neighbours) agents an agent will see in %
-let h=8;        // Steepness for relative similarity
-let c=1;        // weight, how strong the static opinion should be valued
+let k=undefined;        // amount of static opinions
+let m=undefined;        // integer values that a dynamic opinion attribute can be
+let n=undefined;        // amount of dynamic opinions per agent
+let gamma=undefined;    // how many other (not their neighbours) agents an agent will see in %
+let h=undefined;        // Steepness for relative similarity
+let c=undefined;        // weight, how strong the static opinion should be valued
 
 function init() {
     lines = [];
@@ -294,12 +307,13 @@ function step() {
     let random_agent = agents[getRandomInt0(agents.length)];
     
     // Select interlocutors: neighbors + randomly selected
-    let size_keep_neighbours = Math.round(array.length * gamma);
-    let size_new_neighbours = random_agent.neighbours.length - size_keep_neighbours
-    let keep_neighbours = getRandomSubset(random_agent.neighbours, size_keep_neighbours);   // select neighbours to stay in touch with in this round
-    let new_neighbours = getRandomSubset(agents, size_new_neighbours);                      // select new neighbours to communicate with in this round
-    let neighbours = keep_neighbours.concat(new_neighbours);
-    if (neighbours.length != random_agent.neighbours.length) {
+    let size_keep_neighbours = Math.round(random_agent.cell.neighbours.length * (1- gamma));
+    let size_new_neighbours = random_agent.cell.neighbours.length - size_keep_neighbours
+    let keep_neighbours = getRandomSubset(random_agent.cell.neighbours, size_keep_neighbours);   // select neighbours to stay in touch with in this round
+    let new_neighbours = getRandomSubset(cells, size_new_neighbours);                      // select new neighbours to communicate with in this round
+    let neighbour_cells = keep_neighbours.concat(new_neighbours);
+    let neighbours = neighbour_cells.map(c => c.agent);
+    if (neighbours.length != random_agent.cell.neighbours.length) {
         throw Error("Amount interlocutors invalid!");
     }
 
@@ -313,7 +327,7 @@ function step() {
         return; // No similarities with any neighbor: no change
     }
     for (let w=0; w < weights.length; w++) {
-        weights[i] = weights[i] / similarity_sum;
+        weights[w] = weights[w] / similarity_sum;
     }
     
     // Randomly pick another node on the basis of weights, urn model
@@ -322,7 +336,7 @@ function step() {
     // Pick dimension for which the other node that is different than ours
     let deltas_dynamic = [];  // iterate over the dynamic opinions to get the delta
     for (let i=0; i<n; i++) {
-        if (a1.dynamic_opinions[i] == a2.dynamic_opinions[i]) {
+        if (random_agent.dynamic_opinions[i] == other_agent.dynamic_opinions[i]) {
             // Note: here it is different than in absoluteSimilarity() !!!
             deltas_dynamic.push(0);
         } else {
@@ -330,12 +344,12 @@ function step() {
         }
     }
     let deltas_dynamic_sum = deltas_dynamic.reduce((partialSum, a) => partialSum + a, 0);
-    if (deltas_dynamic_sum == 0) {
-        throw Error("I think this should never happen... (function should have returned before)");
-        return; // They're already the same
-    }
+    // if (deltas_dynamic_sum == 0) {
+    //     throw Error("I think this should never happen... (function should have returned before)");
+    //     return; // They're already the same
+    // }
     for (let d=0; d < deltas_dynamic.length; d++) {
-        deltas_dynamic[i] = deltas_dynamic[i] / deltas_dynamic_sum;
+        deltas_dynamic[d] = deltas_dynamic[d] / deltas_dynamic_sum;
     }
 
     let dynamic_opinions_indices = [...Array(n).keys()];
@@ -349,6 +363,10 @@ function animate(){
         if (!isPaused) {
             clear();
             
+            for (let i=0; i<1000; i++){
+                step();
+            }
+
             // display the cells
             for (let i = 0; i < cells.length; i++){
                 cells[i].draw();

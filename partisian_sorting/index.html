@@ -80,7 +80,7 @@
                 </div>
                 <div class="grid-item">n - Amount of dynamic opinions per agent</div>
                 <div class="grid-item">
-                    <input type="number" id="param_n" value="4">
+                    <input type="number" id="param_n" value="10">
                 </div>
                 <div class="grid-item">γ - How many other agents an agent will see in %</div>
                 <div class="grid-item">
@@ -112,23 +112,19 @@
     <script src="canvas.js"></script>
     <script>
         async function loadAndStart() {
-            document.getElementById('loading').style.display = "block";
-            param_k = parseInt(document.getElementById('param_k').value);
-            param_m = parseInt(document.getElementById('param_m').value);
-            param_n = parseInt(document.getElementById('param_n').value);
-            param_gamma = parseFloat(document.getElementById('param_gamma').value);
-            param_h = parseInt(document.getElementById('param_h').value);
-            param_c = parseInt(document.getElementById('param_c').value);
+            k = parseInt(document.getElementById('param_k').value);
+            m = parseInt(document.getElementById('param_m').value);
+            n = parseInt(document.getElementById('param_n').value);
+            gamma = parseFloat(document.getElementById('param_gamma').value);
+            h = parseInt(document.getElementById('param_h').value);
+            c = parseInt(document.getElementById('param_c').value);
 
 
             cells_height = parseInt(document.getElementById('cells_height').value);
             cells_width = parseInt(document.getElementById('cells_width').value);
             cell_size = parseInt(document.getElementById('cell_size').value);
-            await new Promise(r => setTimeout(function(){
-                init();
-                document.getElementById('loading').style.display = "none";
-                animate();
-            }, 0));
+            init();
+            animate();
         }
 
         function tooglePause() {
