@@ -19,18 +19,28 @@ window.addEventListener("mousemove", function(event) {
 });
 
 window.addEventListener("click", function(event) {
+    mouseClick(event, 1);
+});
+window.addEventListener("contextmenu", function(event) {
+    mouseClick(event, 2);
+});
+
+function mouseClick(event, nr) {
     let mouse_x = mouse.x - padding + window.scrollX;
     let mouse_y = mouse.y - padding + window.scrollY;
     if (event.target.id == 'canvas') {
+        event.preventDefault();
         for (let i = 0; i < cells.length; i++) {
             if (cells[i].x < mouse_x && mouse_x < cells[i].x + cell_size &&
                 cells[i].y < mouse_y && mouse_y < cells[i].y + cell_size
             ) {
                 console.log(cells[i]);
+                document.getElementById(`selected_cell_position${nr}`).innerHTML = `(${cells[i].col} | ${cells[i].row})`;
+                document.getElementById(`selected_cell_coordinates${nr}`).innerHTML = `(${cells[i].x} | ${cells[i].y})`;
+                document.getElementById(`selected_cell_static_opinion${nr}`).innerHTML = cells[i].agent.static_opinion;
+                document.getElementById(`selected_cell_dynamic_opinions${nr}`).innerHTML = JSON.stringify(cells[i].agent.dynamic_opinions);
                 return;
             }
         }
-        
-        console.log("" + mouse_x + " | " + mouse_y);
     }
-});
+}

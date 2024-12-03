@@ -47,13 +47,34 @@
         .grid-item {
             display: flex;
         }
+
+        .footer {
+            position: fixed;
+            bottom: 0; /* Aligns to the bottom of the column */
+            width: 40%; /* Optional: span the full width */
+        }
     </style>
+    <script>
+        function changeModel() {
+            let link = document.getElementById("model_select").value;
+            window.location = `C:/Users/tobi8/Documents/!Dokumente/Studium%20LMU%20Master/03_WiSe_24_25/ModaS/SocialSimulations${link}`;
+        }
+    </script>
 
     <div class="row">
         <div class="column-left">
             <canvas id="canvas" style="padding: 32px;"></canvas>
         </div>
         <div class="column-right" style="background-color: lightgray; padding: 3rem;">
+            <div style="display: flex;">
+                <select id="model_select" style="margin-left: auto;" onchange="changeModel()">
+                    <option value="/basic_model/index.html">Basic model</option>
+                    <option value="/gossip_model/index.html">Gossip model</option>
+                    <option value="/majority_model/index.html">Majority model</option>
+                    <option value="/partisian_sorting/index.html">Partisian sorting</option>
+                  </select>
+            </div>
+            <br><br>
             <div class="grid-container">
                 <div class="grid-item">Amount cells (rows)</div>
                 <div class="grid-item">
@@ -105,6 +126,52 @@
             <div style="display: flex; gap: 12px">
                 <button type="button" onclick="tooglePause()">Pause/Resume</button>
                 <input type="range" min="1" max="1000" value="200" class="slider" id="animationSpeed">
+            </div>
+
+            <div class="footer">
+                <hr>
+                <h4 style="margin: 0;">Selected agent1</h4>
+                <i style="font-size: 11px;">(left click)</i>
+                <br><br>
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Cell: </div>
+                        <div id="selected_cell_position1"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Coordinates: </div>
+                        <div id="selected_cell_coordinates1"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Static opinion: </div>
+                        <div id="selected_cell_static_opinion1"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Dynamic opinions: </div>
+                        <div id="selected_cell_dynamic_opinions1"></div>
+                    </div>
+                </div>
+                <h4 style="margin: 0;">Selected agent2</h4>
+                <i style="font-size: 11px;">(right click)</i>
+                <br><br>
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Cell: </div>
+                        <div id="selected_cell_position2"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Coordinates: </div>
+                        <div id="selected_cell_coordinates2"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Static opinion: </div>
+                        <div id="selected_cell_static_opinion2"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div style="margin-right: 16px;">Dynamic opinions: </div>
+                        <div id="selected_cell_dynamic_opinions2"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
