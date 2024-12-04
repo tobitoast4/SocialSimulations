@@ -39,7 +39,6 @@ function Cell(row, col, x, y, cell_size){
     this.y = y;
     this.cell_size = cell_size;
     this.neighbours = [];
-    this.convince_threshold = getRandomInt(4, 6);  // some are convinced with 4 other neighbours, some with 6 (and some with 5)
     this.cell_state = getRandomInt(0, 1);  // 0: did not adopt (yet), 1: did adopt
     this.new_cell_state = this.cell_state; 
 
@@ -60,7 +59,7 @@ function Cell(row, col, x, y, cell_size){
                 amount_neighbours_other_state++;
             }
         }
-        if (amount_neighbours_other_state >= 5) {
+        if (amount_neighbours_other_state >= getRandomInt(convince_threshold_min, convince_threshold_max)) {
             this.toggleCellState();
         }
     }
@@ -99,6 +98,9 @@ let tell_gossip_prob = undefined;    // set in setup (in %)
 let cells_width = undefined;                // set in setup
 let cells_height = undefined;               // set in setup
 let cell_size = undefined;                  // set in setup
+
+let convince_threshold_min = undefined;
+let convince_threshold_max = undefined;
 
 
 function init() {

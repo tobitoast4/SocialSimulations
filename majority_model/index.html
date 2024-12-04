@@ -71,6 +71,20 @@
                 <div class="grid-item">
                     <input type="number" id="tell_gossip_prob" value="25">
                 </div>
+                <div class="grid-item">Convince threshold (min / max)</div>
+                <div class="grid-item">
+                    <div style="display: flex; gap: 10px;">
+                        <div>(</div>
+                        <input type="number" id="convince_threshold_min" value="5" min="0" max="8">
+                        <div>/</div>
+                        <input type="number" id="convince_threshold_max" value="5" min="0" max="8">
+                        <div>)</div>
+                    </div>
+                </div>
+                <i style="font-size: 12px;">
+                    The random number out of this range (min and max included) is the threshold, 
+                    that must be exceeded to convince the cell from the other opinion. Calculated again for each cell in each step.
+                </i>
             </div>
             <br>
             <div style="display: flex; gap: 12px">
@@ -94,6 +108,8 @@
             cells_height = parseInt(document.getElementById('cells_height').value);
             cells_width = parseInt(document.getElementById('cells_width').value);
             cell_size = parseInt(document.getElementById('cell_size').value);
+            convince_threshold_min = parseInt(document.getElementById('convince_threshold_min').value);
+            convince_threshold_max = parseInt(document.getElementById('convince_threshold_max').value);
             await new Promise(r => setTimeout(function(){
                 init();
                 document.getElementById('loading').style.display = "none";
