@@ -48,12 +48,27 @@
             display: flex;
         }
     </style>
+    <script>
+        function changeModel() {
+            let link = document.getElementById("model_select").value;
+            window.location = `C:/Users/tobi8/Documents/!Dokumente/Studium%20LMU%20Master/03_WiSe_24_25/ModaS/SocialSimulations${link}`;
+        }
+    </script>
 
     <div class="row">
         <div class="column-left">
             <canvas style="padding: 32px;"></canvas>
         </div>
         <div class="column-right" style="background-color: lightgray; padding: 3rem">
+            <div style="display: flex;">
+                <select id="model_select" style="margin-left: auto;" onchange="changeModel()">
+                    <option value="/basic_model/index.html">Basic model</option>
+                    <option value="/gossip_model/index.html">Gossip model</option>
+                    <option value="/majority_model/index.html" selected>Majority model</option>
+                    <option value="/partisian_sorting/index.html">Partisian sorting</option>
+                </select>
+            </div>
+            <br><br>
             <div class="grid-container">
                 <div class="grid-item">Amount cells (rows)</div>
                 <div class="grid-item">
