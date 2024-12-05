@@ -9,6 +9,9 @@ function clear(){
     ctx.clearRect(0, 0, innerWidth, innerHeight)
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function Line(x0, y0, x1, y2){
     this.x0 = x0;
@@ -36,12 +39,8 @@ function Cell(row, col, x, y, cell_size){
     this.y = y;
     this.cell_size = cell_size;
     this.neighbours = [];
-    this.new_cell_state = 0; 
-    this.cell_state = 0;  // 0: did not adopt (yet), 1: dit adopt
-    let random_number = Math.random() * 100;
-    if (random_number < 50){
-        this.cell_state = 1;
-    }
+    this.cell_state = getRandomInt(0, 1);  // 0: did not adopt (yet), 1: did adopt
+    this.new_cell_state = this.cell_state; 
 
     this.draw = function() {
         ctx.lineWidth = 1;
@@ -54,35 +53,23 @@ function Cell(row, col, x, y, cell_size){
     }
 
     this.determineNewCellState = function() {
-        let amount_neighbours_state_1 = 0;
-        let amount_neighbours_state_0 = 0;
+        let amount_neighbours_other_state = 0;
         for (let i = 0; i < this.neighbours.length; i++) {
-            if (this.neighbours[i].cell_state == 1) {
-                amount_neighbours_state_1++;
-            }
-            if (this.neighbours[i].cell_state == 0) {
-                amount_neighbours_state_0++;
+            if (this.neighbours[i].cell_state != this.cell_state) {
+                amount_neighbours_other_state++;
             }
         }
-        this.new_cell_state = this.cell_state;  // keep this as default
-        if (amount_neighbours_state_1 >= 5) {
-            this.new_cell_state = 1;  // change is majority is 1
+        if (amount_neighbours_other_state >= getRandomInt(convince_threshold_min, convince_threshold_max)) {
+            this.toggleCellState();
         }
-        if (amount_neighbours_state_0 >= 5) {
-            this.new_cell_state = 0;  // change is majority is 0
+    }
+
+    this.toggleCellState = function() {
+        if (this.cell_state == 1) {
+            this.new_cell_state = 0;
+        } else {
+            this.new_cell_state = 1;
         }
-        // if (this.cell_state == 0 && amount_neighbours_state_1 >= 3) {
-        //     let random_number = Math.random() * 100;
-        //     if (random_number < 50){
-        //         this.new_cell_state = 1;
-        //     }
-        // }
-        // if (this.cell_state == 1 && amount_neighbours_state_0 >= 3) {
-        //     let random_number = Math.random() * 100;
-        //     if (random_number < 50){
-        //         this.new_cell_state = 0;
-        //     }
-        // }
     }
 
     this.update = function() {
@@ -111,6 +98,9 @@ let tell_gossip_prob = undefined;    // set in setup (in %)
 let cells_width = undefined;                // set in setup
 let cells_height = undefined;               // set in setup
 let cell_size = undefined;                  // set in setup
+
+let convince_threshold_min = undefined;
+let convince_threshold_max = undefined;
 
 
 function init() {
