@@ -79,7 +79,7 @@ function getCellAtPosition(row, col) {
 }
 
 
-isPaused = false;
+isPaused = true;
 animationTimeout = -1; 
 
 let lines = [];

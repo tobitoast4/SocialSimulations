@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/styles.css') }}">
+</head>
+<body>
+    <script>
+        function changeModel() {
+            let link = document.getElementById("model_select").value;
+            window.location = link;
+        }
+    </script>
+
+    {% block body %}
+    {% endblock %}
+
+</body>
+</html>

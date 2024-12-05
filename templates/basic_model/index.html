@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+    <div class="column-left">
+        <canvas style="padding: 32px;"></canvas>
+    </div>
+    <div class="column-right" style="background-color: lightgray; padding: 3rem">
+        {% include 'select_model.html' %}
+        <div class="grid-container">
+            <div class="grid-item">Diagram x axis</div>
+            <div class="grid-item">
+                <input type="number" id="steps_per_frame" value="50" step="10">
+                <br>
+            </div>
+            <i style="font-size: small;">Hint: If your d is low, this should be high</i>
+            <br>
+            <div class="grid-item">Amount agents</div>
+            <div class="grid-item">
+                <input type="number" id="amount_agents" value="1000" step="500">
+            </div>
+            <div class="grid-item">Opinion distance threshold - d</div>
+            <div class="grid-item">
+                <input type="number" id="opinion_distance" value="0.5" step=".05">
+            </div>
+            <div class="grid-item">Convergence parameter - µ</div>
+            <div class="grid-item">
+                <input type="number" id="mue" value="0.5" step=".05">
+            </div>
+        </div>
+        <br>
+        <div style="display: flex; gap: 12px">
+            <button type="button" onclick="loadAndStart()">Reload & start setup</button>
+            <div id="loading" class="loader" style="display: none"></div>
+        </div>
+        <br>
+        <hr>
+        <div style="display: flex; gap: 12px">
+            <button type="button" onclick="tooglePause()">Pause/Resume</button>
+            <input type="range" min="1" max="1000" value="200" class="slider" id="animationSpeed">
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/basic_model/canvas.js' )}}"></script>
+<script>
+    async function loadAndStart() {
+        clear();
+        animation_frame = 0;
+
+        document.getElementById('loading').style.display = "block";
+        steps_per_frame = parseInt(document.getElementById('steps_per_frame').value);
+        amount_agents = parseInt(document.getElementById('amount_agents').value);
+        d = parseFloat(document.getElementById('opinion_distance').value);
+        µ = parseFloat(document.getElementById('mue').value);
+        await new Promise(r => setTimeout(function(){
+            init();
+            document.getElementById('loading').style.display = "none";
+            animate();
+        }, 0));
+    }
+
+    function tooglePause() {
+        isPaused = !isPaused;
+    }
+
+    var slider = document.getElementById("animationSpeed");
+    animationTimeout = 1000 - slider.value;
+    slider.oninput = function() {
+        animationTimeout = 1000 - this.value;
+    }
+</script>
+
+{% endblock %}
