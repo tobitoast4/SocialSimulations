@@ -25,7 +25,7 @@
         <div class="grid-container">
             <div class="grid-item">k - Amount of different static opinions</div>
             <div class="grid-item">
-                <input type="number" id="param_k" value="2">
+                <input type="number" id="param_k" value="2" min="1" max="5">
             </div>
             <div class="grid-item">m - Possible dynamic opinion integer values (1-m)</div>
             <div class="grid-item">
@@ -37,15 +37,15 @@
             </div>
             <div class="grid-item">γ - How many other agents an agent will see in %</div>
             <div class="grid-item">
-                <input type="number" id="param_gamma" value="0.5" step=".1">
+                <input type="number" id="param_gamma" value="0.5" step=".1" min="0" max="1">
             </div>
             <div class="grid-item">h - Steepness for relative similarity</div>
             <div class="grid-item">
-                <input type="number" id="param_h" value="8">
+                <input type="number" id="param_h" value="8" min="1">
             </div>
             <div class="grid-item">c - Influence of static opinion on abs. similarity</div>
             <div class="grid-item">
-                <input type="number" id="param_c" value="4">
+                <input type="number" id="param_c" value="4" min="1">
             </div>
         </div>
         <br>
@@ -108,6 +108,7 @@
     </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/partisian_sorting/utils.js' )}}"></script>
 <script src="{{ url_for('static', filename='js/partisian_sorting/canvas.js' )}}"></script>
 <script src="{{ url_for('static', filename='js/partisian_sorting/mouse.js' )}}"></script>
 <script>

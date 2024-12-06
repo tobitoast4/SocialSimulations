@@ -128,22 +128,19 @@ function Agent(cell){
     this.draw = function() {
         this.calculateColor();
         if (this.static_opinion == 1) {  // draw agent as an x
-            let margin = cell_size / 6;
-            ctx.lineWidth = cell_size / 10 + 1;
-            ctx.beginPath();
-            ctx.moveTo(this.cell.x + margin, this.cell.y + margin);
-            ctx.lineTo(this.cell.x + cell_size - margin, this.cell.y + cell_size - margin);
-            ctx.moveTo(this.cell.x + cell_size - margin, this.cell.y + margin);
-            ctx.lineTo(this.cell.x + margin, this.cell.y + cell_size - margin);
-            ctx.strokeStyle = this.color;
-            ctx.stroke();
+            drawCross(ctx, this.cell.x, this.cell.y, cell_size, this.color);
         }
         if (this.static_opinion == 2) {  // draw agent as an o
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(this.cell.x + cell_size / 2, this.cell.y + cell_size / 2, cell_size / 3, 0, 2 * Math.PI);
-            ctx.fillStyle = this.color;
-            ctx.fill();
+            drawCircle(ctx, this.cell.x, this.cell.y, cell_size, this.color);
+        }
+        if (this.static_opinion == 3) {  // draw agent as a diamond
+            drawDiamond(ctx, this.cell.x, this.cell.y, cell_size, this.color);
+        }
+        if (this.static_opinion == 4) {  // draw agent as a diamond
+            drawTriangle(ctx, this.cell.x, this.cell.y, cell_size, this.color);
+        }
+        if (this.static_opinion == 5) {  // draw agent as a diamond
+            drawStar(ctx, this.cell.x, this.cell.y, cell_size, this.color);
         }
     }
 }
@@ -168,6 +165,7 @@ let agents = [];
 let cells_width = undefined;                // set in setup
 let cells_height = undefined;               // set in setup
 let cell_size = undefined;                  // set in setup
+let steps_per_frame = 1000;
 
 let k=undefined;        // amount of static opinions
 let m=undefined;        // integer values that a dynamic opinion attribute can be
@@ -344,10 +342,9 @@ function step() {
         }
     }
     let deltas_dynamic_sum = deltas_dynamic.reduce((partialSum, a) => partialSum + a, 0);
-    // if (deltas_dynamic_sum == 0) {
-    //     throw Error("I think this should never happen... (function should have returned before)");
-    //     return; // They're already the same
-    // }
+    if (deltas_dynamic_sum == 0) {
+        return; // They're already the same
+    }
     for (let d=0; d < deltas_dynamic.length; d++) {
         deltas_dynamic[d] = deltas_dynamic[d] / deltas_dynamic_sum;
     }
@@ -363,7 +360,7 @@ function animate(){
         if (!isPaused) {
             clear();
             
-            for (let i=0; i<1000; i++){
+            for (let i=0; i<steps_per_frame; i++){
                 step();
             }
 
