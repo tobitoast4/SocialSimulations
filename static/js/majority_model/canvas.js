@@ -94,7 +94,6 @@ animationTimeout = -1;
 let lines = [];
 let cells = [];
 
-let tell_gossip_prob = undefined;    // set in setup (in %)
 let cells_width = undefined;                // set in setup
 let cells_height = undefined;               // set in setup
 let cell_size = undefined;                  // set in setup
