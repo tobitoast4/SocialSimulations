@@ -39,7 +39,7 @@ function Cell(row, col, x, y, cell_size){
     this.y = y;
     this.cell_size = cell_size;
     this.neighbours = [];
-    this.cell_state = getRandomInt(0, 1);  // 0: did not adopt (yet), 1: did adopt
+    this.cell_state = getRandomInt(0, 1);
     this.new_cell_state = this.cell_state; 
 
     this.draw = function() {
@@ -131,33 +131,77 @@ function init() {
         }
     }
 
+
     for (let i = 0; i < cells.length; i++){
         let cell = cells[i];
         if (cell.row-1 >= 0) {  // north
             cell.neighbours.push(getCellAtPosition(cell.row-1, cell.col));
+        } else {  // this is for the torus (each cell should have 8 neighbors)
+            cell.neighbours.push(getCellAtPosition(cells_height-1, cell.col));
         }
         if (cell.row+1 < cells_height) {  // south
             cell.neighbours.push(getCellAtPosition(cell.row+1, cell.col));
+        } else {  // this is for the torus (each cell should have 8 neighbors)
+            cell.neighbours.push(getCellAtPosition(0, cell.col));
         }
         if (cell.col-1 >= 0) {  // west
             cell.neighbours.push(getCellAtPosition(cell.row, cell.col-1));
+        } else {  // this is for the torus (each cell should have 8 neighbors)
+            cell.neighbours.push(getCellAtPosition(cell.row, cells_width-1));
         }
         if (cell.col+1 < cells_width) {  // east
             cell.neighbours.push(getCellAtPosition(cell.row, cell.col+1));
+        } else {
+            cell.neighbours.push(getCellAtPosition(cell.row, 0));
         }
+
         if (cell.row-1 >= 0 && cell.col-1 >= 0) {  // north-west
             cell.neighbours.push(getCellAtPosition(cell.row-1, cell.col-1));
+        } else {
+            if (cell.row-1 < 0 && cell.col-1 >= 0) {
+                cell.neighbours.push(getCellAtPosition(cells_height-1, cell.col-1));
+            }
+            if (cell.row-1 >= 0 && cell.col-1 < 0) {
+                cell.neighbours.push(getCellAtPosition(cell.row-1, cells_width-1));
+            }
         }
         if (cell.row-1 >= 0 && cell.col+1 < cells_width) {  // north-east
             cell.neighbours.push(getCellAtPosition(cell.row-1, cell.col+1));
+        } else {
+            if (cell.row-1 < 0 && cell.col+1 < cells_width) {
+                cell.neighbours.push(getCellAtPosition(cells_height-1, cell.col+1));
+            }
+            if (cell.row-1 >= 0 && cell.col+1 >= cells_width) {
+                cell.neighbours.push(getCellAtPosition(cells_height-1, 0));
+            }
         }
         if (cell.row+1 < cells_height && cell.col-1 >= 0) {  // south-west
             cell.neighbours.push(getCellAtPosition(cell.row+1, cell.col-1));
+        } else {
+            if (cell.row+1 >= cells_height && cell.col-1 >= 0) {
+                cell.neighbours.push(getCellAtPosition(0, cell.col-1));
+            }
+            if (cell.row+1 < cells_height && cell.col-1 < 0) {
+                cell.neighbours.push(getCellAtPosition(cell.row+1, cells_width-1));
+            }
         }
         if (cell.row+1 < cells_height && cell.col+1 < cells_width) {  // south-east
             cell.neighbours.push(getCellAtPosition(cell.row+1, cell.col+1));
+        } else {
+            if (cell.row+1 >= cells_height && cell.col+1 < cells_width) {  // south-east
+                cell.neighbours.push(getCellAtPosition(0, cell.col+1));
+            }
+            if (cell.row+1 < cells_height && cell.col+1 >= cells_width) {  // south-east
+                cell.neighbours.push(getCellAtPosition(cell.row+1, 0));
+            }
         }
     }
+    // connect the corner cells (for the torus)
+    getCellAtPosition(0, 0).neighbours.push(getCellAtPosition(cells_height-1, cells_width-1));
+    getCellAtPosition(cells_height-1, cells_width-1).neighbours.push(getCellAtPosition(0, 0));
+    getCellAtPosition(cells_height-1, 0).neighbours.push(getCellAtPosition(0, cells_width-1));
+    getCellAtPosition(0, cells_width-1).neighbours.push(getCellAtPosition(cells_height-1, 0));
+
     
     for (let i = 0; i < cells.length; i++){
         cells[i].draw();
